@@ -3,6 +3,7 @@ import './index.css';
 import {useDispatch} from "react-redux";
 import {setUserInfo} from "../../store/reducers/userReducer";
 import {useNavigate} from "react-router-dom";
+import {login, getUser} from "../../utils/http";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -12,9 +13,25 @@ const Login = () => {
   }
 
   const onFinish= (values) => {
-    dispatch(setUserInfo(111));
-    navigate('/home');
-    console.log('Success:', values);
+    const params = {
+      ...values
+    }
+    login(params).then(res => {
+      if(res.code === 200) {
+        console.log(res.data)
+        localStorage.setItem('token', res.data.token);
+        const params = {
+          token: res.data.token
+        }
+        getUser(params).then(res => {
+          if(res.code === 200) {
+            console.log(res.data)
+            dispatch(setUserInfo(res.data.userInfo));
+            navigate('/home');
+          }
+        })
+      }
+    })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -27,9 +44,12 @@ const Login = () => {
     <div className='loginContainer'>
       <div className="loginPanel">
         <div className='loginContent'>
+          <div className="title">
+            <span>后台管理系统</span>
+          </div>
           <Form
             name="basic"
-            labelCol={{span: 3}}
+            labelCol={{span: 4}}
             wrapperCol={{span: 16}}
             style={{maxWidth: 600}}
             initialValues={{remember: true}}
@@ -37,10 +57,10 @@ const Login = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item label='账号' name='username' rules={formRules.username}>
+            <Form.Item className='label' label='账号' name='username' rules={formRules.username}>
               <Input/>
             </Form.Item>
-            <Form.Item label="密码" name="password" rules={formRules.password}>
+            <Form.Item className='label' label="密码" name="password" rules={formRules.password}>
               <Input.Password/>
             </Form.Item>
             <Form.Item label={null}>

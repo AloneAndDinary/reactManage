@@ -1,6 +1,7 @@
 .loginContainer{
     background: #ffffff;
     height: 100vh;
+    background-image: url('../../../public/image/loginBg.png');
 }
 .loginPanel{
     width: 100%;
@@ -12,5 +13,15 @@
 .loginContent{
     width: 600px;
     height: 300px;
-    background: #ffffff;
+    padding: 10px 20px;
+    color: #fff;
+}
+.loginContainer .title{
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.label label{
+    color: #fff!important;
 }
